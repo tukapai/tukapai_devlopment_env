@@ -1,0 +1,13 @@
+version: '3.1'
+
+services:
+
+  redmine:
+    image: redmine
+    restart: always
+    ports:
+      - 30080:3000
+    volumes:
+      - /usr/src/redmine/files
+      - /usr/src/redmine/sqlite
+      - /usr/src/redmine/public/themes
