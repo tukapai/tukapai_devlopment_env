@@ -1,0 +1,43 @@
+version: "2"
+
+services:
+  # PHP Web Server
+  web:
+    # Build the Drupal 7 image
+    # https://hub.docker.com/r/_/drupal/
+    image: drupal:7
+    # Environment variables
+    environment:
+      # Drupal settings
+      DRUPAL_PROFILE: standard
+      DRUPAL_SITE_NAME: Drupal
+      DRUPAL_USER: admin
+      DRUPAL_PASS: admin
+      DRUPAL_DBURL: mysql://drupal:drupal@database:3306/drupal
+    ports:
+      - "8000:80"
+    volumes:
+      - ./drupal:/app
+    links:
+      - database:database
+    command: php -S 0.0.0.0:80 -t /app
+    working_dir: /app
+    restart: always
+
+  # MySQL Server
+  database:
+    image: mariadb:10
+    environment:
+      MYSQL_USER: drupal
+      MYSQL_PASSWORD: drupal
+      MYSQL_DATABASE: drupal
+      MYSQL_ROOT_PASSWORD: ''
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    ports:
+      - "3306:3306"
+    restart: always
+    volumes:
+      - mysql-db:/var/lib/mysql
+
+volumes:
+  mysql-db:
